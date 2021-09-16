@@ -11,12 +11,6 @@ const Tag Tag::Error;
 
 Tag::Tag(type_t type, subtype_t subtype) : zeek::Tag(analyzer_mgr->GetTagType(), type, subtype) { }
 
-Tag& Tag::operator=(const Tag& other)
-	{
-	zeek::Tag::operator=(other);
-	return *this;
-	}
-
 const EnumValPtr& Tag::AsVal() const
 	{
 	return zeek::Tag::AsVal(analyzer_mgr->GetTagType());

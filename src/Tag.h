@@ -42,12 +42,12 @@ public:
 	/**
 	 * Type for the analyzer's main type.
 	 */
-	typedef uint32_t type_t;
+	using type_t = uint32_t;
 
 	/**
 	 * Type for the analyzer's subtype.
 	 */
-	typedef uint32_t subtype_t;
+	using subtype_t = uint32_t;
 
 	/**
 	 * Returns the tag's main type.
@@ -59,28 +59,15 @@ public:
 	 */
 	subtype_t Subtype() const { return subtype; }
 
-	/**
-	 * Returns the numerical values for main and subtype inside a string
-	 * suitable for printing. This is primarily for debugging.
-	 */
-	std::string AsString() const;
-
-protected:
 	/*
 	 * Copy constructor.
 	 */
 	Tag(const Tag& other);
 
 	/**
-	 * Default constructor. This initializes the tag with an error value
-	 * that will make \c operator \c bool return false.
-	 */
-	Tag();
-
-	/**
 	 * Destructor.
 	 */
-	~Tag();
+	virtual ~Tag();
 
 	/**
 	 * Assignment operator.
@@ -91,6 +78,12 @@ protected:
 	 * Move assignment operator.
 	 */
 	Tag& operator=(const Tag&& other) noexcept;
+
+	/**
+	 * Returns the numerical values for main and subtype inside a string
+	 * suitable for printing. This is primarily for debugging.
+	 */
+	std::string AsString() const;
 
 	/**
 	 * Compares two tags for equality.
@@ -116,13 +109,12 @@ protected:
 		return type != other.type ? type < other.type : (subtype < other.subtype);
 		}
 
+protected:
 	/**
-	 * Returns the script-layer enum that corresponds to this tag.
-	 * The returned value does not have its ref-count increased.
-	 *
-	 * @param etype the script-layer enum type associated with the tag.
+	 * Default constructor. This initializes the tag with an error value
+	 * that will make \c operator \c bool return false.
 	 */
-	const EnumValPtr& AsVal(const EnumTypePtr& etype) const;
+	Tag();
 
 	/**
 	 * Constructor.
@@ -143,6 +135,14 @@ protected:
 	 * @param val An enum value of script type \c Analyzer::Tag.
 	 */
 	explicit Tag(EnumValPtr val);
+
+	/**
+	 * Returns the script-layer enum that corresponds to this tag.
+	 * The returned value does not have its ref-count increased.
+	 *
+	 * @param etype the script-layer enum type associated with the tag.
+	 */
+	const EnumValPtr& AsVal(const EnumTypePtr& etype) const;
 
 private:
 	type_t type; // Main type.
