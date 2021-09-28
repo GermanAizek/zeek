@@ -1,0 +1,45 @@
+name: Run Zeek cluster tests
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+    tags:
+      - 'v*'
+      - '!v*-dev'
+      - 'release'
+
+jobs:
+  cluster-testing:
+    # We need the Zeek Docker image build job to complete first, since we need
+    # the resulting image for our docker-compose setup.
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v1
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: zeek-docker-image
+          path: /tmp/zeek-docker-image-${{ github.run_id }}.tar
+
+      - name: Load Docker image
+        run: docker load --input /tmp/zeek-docker-image-${{ github.run_id }}.tar
+
+      - name: Retrieve cluster testsuite
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/ckreibich/zeek-testing-cluster
+          path: testing/external
+
+      - name: Run testsuite
+        run: make -C testing/external/zeek-testing-cluster
+
+      - name: Preserve btest artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cluster-btest
+          path: testing/external/zeek-testing-cluster/.tmp
+          if-no-files-found: ignore
