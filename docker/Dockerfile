@@ -44,7 +44,7 @@ RUN apt-get -q update \
      ca-certificates \
      git \
      libmaxminddb0 \
-     libpython3.7 \
+     libpython3.9 \
      libpcap0.8 \
      libssl1.1 \
      libz1 \
