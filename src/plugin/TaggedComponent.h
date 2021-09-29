@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "zeek/Tag.h"
+#include "zeek/Type.h"
 
 namespace zeek::plugin
 	{
@@ -23,7 +24,8 @@ public:
 	 * and component instances can accordingly access it via Tag().
 	 * If not used, leave at zero.
 	 */
-	explicit TaggedComponent(Tag::subtype_t subtype = 0);
+	explicit TaggedComponent(Tag::subtype_t subtype = 0,
+	                         zeek::EnumTypePtr etype = nullptr);
 
 	/**
 	 * Initializes tag by creating the unique tag value for thos componend.
@@ -40,6 +42,7 @@ private:
 	zeek::Tag tag; /**< The automatically assigned analyzer tag. */
 	Tag::subtype_t subtype;
 	bool initialized;
+	EnumTypePtr etype;
 	static Tag::type_t type_counter; /**< Used to generate globally
 	                                             unique tags. */
 	};

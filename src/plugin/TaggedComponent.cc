@@ -1,11 +1,15 @@
 #include "zeek/plugin/TaggedComponent.h"
 
+#include "zeek/IntrusivePtr.h"
+#include "zeek/Type.h"
+
 namespace zeek::plugin {
 
 Tag::type_t TaggedComponent::type_counter(0);
 
-TaggedComponent::TaggedComponent(Tag::subtype_t subtype)
-	: tag(1, 0), subtype(subtype), initialized(false)
+TaggedComponent::TaggedComponent(Tag::subtype_t subtype, EnumTypePtr etype)
+	: tag(etype, 1, 0), subtype(subtype),
+	  initialized(false), etype(std::move(etype))
 	{
 	}
 
@@ -17,7 +21,7 @@ void TaggedComponent::InitializeTag()
 	{
 	assert(initialized == false);
 	initialized = true;
-	tag = zeek::Tag(++type_counter, subtype);
+	tag = zeek::Tag(etype, ++type_counter, subtype);
 	}
 
 /**
